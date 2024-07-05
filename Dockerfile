@@ -21,6 +21,9 @@ COPY . .
 # Execute as migrações do Prisma e gere os artefatos necessários
 RUN npx prisma migrate dev && npx prisma generate
 
+# Execute o script setupDatabase.ts para inicializar o banco de dados com dados iniciais
+RUN npx ts-node src/database/setupDatabase.ts
+
 # Exponha a porta que a aplicação estará ouvindo
 EXPOSE 8080
 
