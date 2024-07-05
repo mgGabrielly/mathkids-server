@@ -45,7 +45,7 @@ model Module {
 
 model Activity {
   id                    Int              @id @default(autoincrement())
-  description           String          
+  description           String           @unique
   activityType          String
   referenceModule       String
   numberOfQuestions     Int

@@ -6,6 +6,7 @@ import modulesRoutes from './routes/modulesRoutes';
 import resetPasswordRoutes from './routes/resetPasswordRoutes';
 import authRoutes from './routes/authRoutes';
 import activityRoutes from './routes/activityRoutes';
+import progressRoutes from './routes/progressRoutes';
 // import swaggerUi from 'swagger-ui-express';
 // import swaggerDocs from './swagger.json';
 
@@ -32,6 +33,8 @@ app.use(modulesRoutes);
 app.use(authRoutes);
 app.use(activityRoutes);
 app.use(resetPasswordRoutes);
+app.use(activityRoutes);
+app.use(progressRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello guys!');
