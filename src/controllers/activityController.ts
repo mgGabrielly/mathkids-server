@@ -4,114 +4,132 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 class ActivityController {
-    async createModule(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async createActivity(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { moduleTitle, videoTitle, videoUrl } = req.body;
-            const userModule = await prisma.module.findUnique({ where: { moduleTitle } });
+            const { description, activityType, referenceModule, numberOfQuestions } = req.body;
+            const userActivity = await prisma.activity.findUnique({ where: { description } });
     
-            if (userModule) {
+            if (userActivity) {
                 res.status(405).json({
-                    message: "Módulo já existe",
+                    message: "Atividade já existe",
                 });
                 return
             }
     
-            const module = await prisma.module.create({
+            const activity = await prisma.activity.create({
                 data: {
-                    moduleTitle,
-                    videoTitle,
-                    videoUrl
+                    description,
+                    activityType,
+                    referenceModule,
+                    numberOfQuestions
                 },
             });
-            res.json(module)
+            res.json(activity)
           
         } catch (error) {
-            res.status(500).json({ error: "Não foi possível criar o módulo." });
+            res.status(500).json({ error: "Não foi possível criar a atividade." });
         }
     }
 
-    async getAllModules(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getAllActivity(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const modules = await prisma.module.findMany();
-            res.json({ modules });
+            const activity = await prisma.activity.findMany();
+            res.json({ activity });
         } catch (error) {
-            res.status(500).json({ error: "Ocorreu um erro ao buscar os módulos." });
+            res.status(500).json({ error: "Ocorreu um erro ao buscar as atividades." });
         }
     }
 
-    async getModuleByModuleTitle(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getActivityByDescription(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { moduleTitle } = req.params;
-            const module = await prisma.module.findUnique({
-                where: { moduleTitle: String(moduleTitle) },
+            const { description } = req.params;
+            const activity = await prisma.activity.findUnique({
+                where: { description: String(description) },
             });
-            if (!module) {
-                res.status(404).json({ error: "Módulo não encontrado." });
+            if (!activity) {
+                res.status(404).json({ error: "Atividade não encontrada." });
             } else {
-                res.json({ module });
+                res.json({ activity });
             }
         } catch (error) {
-            res.status(500).json({ error: "Ocorreu um erro ao buscar o módulo pelo nome do módulo." });
+            res.status(500).json({ error: "Ocorreu um erro ao buscar a atividade pela descrição." });
         }
     }
 
-    async getModuleById(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getActivityByModule(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            const { id } = req.params;
-            const module = await prisma.module.findUnique({
-                where: { id: Number(id) },
+            const { referenceModule } = req.params;
+            const activities = await prisma.activity.findMany({
+                where: { referenceModule: String(referenceModule) },
             });
-            if (!module) {
-                res.status(404).json({ error: "Módulo não encontrado." });
+            if (!activities) {
+                res.status(404).json({ error: "Atividades do módulo não encontradas." });
             } else {
-                res.json({ module });
+                res.json({ activities });
             }
         } catch (error) {
-            res.status(500).json({ error: "Ocorreu um erro ao buscar o módulo por ID." });
+            res.status(500).json({ error: "Ocorreu um erro ao buscar as atividades pelo módulo." });
         }
     }
 
-    async updateModule(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async getActivitById(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { id } = req.params;
-            const { moduleTitle, videoTitle, videoUrl } = req.body;
-            const module = await prisma.module.findUnique({
+            const activity = await prisma.activity.findUnique({
                 where: { id: Number(id) },
             });
-            if (!module) {
-                res.status(404).json({ error: "Módulo não encontrado." });
+            if (!activity) {
+                res.status(404).json({ error: "Atividade não encontrada." });
             } else {
-                const moduleUpdate = await prisma.module.update({
-                    where: { moduleTitle: module.moduleTitle },
+                res.json({ activity });
+            }
+        } catch (error) {
+            res.status(500).json({ error: "Ocorreu um erro ao buscar a atividade por ID." });
+        }
+    }
+
+    async updateActivity(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { id } = req.params;
+            const { description, activityType, referenceModule, numberOfQuestions } = req.body;
+            const activity = await prisma.activity.findUnique({
+                where: { id: Number(id) },
+            });
+            if (!activity) {
+                res.status(404).json({ error: "Atividade não encontrada." });
+            } else {
+                const activityUpdate = await prisma.activity.update({
+                    where: { id: Number(id) },
                     data: {
-                        moduleTitle,
-                        videoTitle,
-                        videoUrl
+                        description, 
+                        activityType, 
+                        referenceModule, 
+                        numberOfQuestions
                     },
                 });
-                res.json({ moduleUpdate });
+                res.json({ activityUpdate });
             }
         } catch (error) {
-            res.status(500).json({ error: "Não foi possível atualizar o módulo." });
+            res.status(500).json({ error: "Não foi possível atualizar a atividade." });
         }
     }
 
-    async deleteModule(req: Request, res: Response, next: NextFunction): Promise<void> {
+    async deleteActivity(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             const { id } = req.params;
-            const module = await prisma.module.findUnique({
+            const activity = await prisma.activity.findUnique({
                 where: { id: Number(id) },
             });
-            if (!module) {
-                res.status(404).json({ error: "Módulo não encontrado." });
+            if (!activity) {
+                res.status(404).json({ error: "Atividade não encontrada." });
             } else {
-                await prisma.module.delete({
+                await prisma.activity.delete({
                     where: { id: Number(id) },
                 });
-                res.json({ message: "Módulo excluído com sucesso." });
+                res.json({ message: "Atividade excluída com sucesso." });
             }
         } catch (error) {
-            res.status(500).json({ error: "Ocorreu um erro ao excluir o módulo." });
+            res.status(500).json({ error: "Ocorreu um erro ao excluir a atividade." });
         }
     }
 
