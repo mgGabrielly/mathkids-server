@@ -28,12 +28,12 @@ async function setupDatabase() {
                 {
                     moduleTitle: 'Módulo 1',
                     videoTitle: 'Vídeo do Módulo 1',
-                    videoUrl: 'https://video1.com',
+                    videoUrl: 'zXiFaFkL9KQ&t=36s',
                 },
                 {
                     moduleTitle: 'Módulo 2',
                     videoTitle: 'Vídeo do Módulo 2',
-                    videoUrl: 'https://video2.com',
+                    videoUrl: '9gxndvXzC6U',
                 },
             ],
         });
