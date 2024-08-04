@@ -54,13 +54,13 @@ async function setupDatabase() {
                 },
                 {
                     moduleTitle: 'Módulo 3',
-                    videoTitle: 'Antecessor e sucessor',
-                    videoUrl: 'rtdknGTnePE',
+                    videoTitle: 'Adição',
+                    videoUrl: 'kq0kh0XvT9c',
                 },
                 {
                     moduleTitle: 'Módulo 4',
-                    videoTitle: 'Adição',
-                    videoUrl: 'kq0kh0XvT9c&list=PLbJFFlKBGuS4KhM0BG49t_9Mwluibqnuc',
+                    videoTitle: 'Antecessor e sucessor',
+                    videoUrl: 'rtdknGTnePE',
                 },
             ],
         });
