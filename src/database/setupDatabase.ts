@@ -1,39 +1,66 @@
-import prisma from './prisma'; // Importa o Prisma Client configurado
+import prisma from './prisma';
+import { hash } from 'bcryptjs';
 
 async function setupDatabase() {
     try {
-        // Crie os usuários iniciais
-        await prisma.user.createMany({
+        const hashedPassword = await hash('Oi@12345', 8);
+        const users = await prisma.user.createMany({
             data: [
                 {
-                    name: 'Usuário 1',
-                    email: 'usuario1@example.com',
-                    password: 'senha1',
-                    userType: 'normal',
-                    status: 'ativo',
+                    name: 'Teste 1',
+                    email: 'teste1@example.com',
+                    password: hashedPassword,
+                    userType: 'common',
+                    status: 'active',
                 },
                 {
-                    name: 'Usuário 2',
-                    email: 'usuario2@example.com',
-                    password: 'senha2',
-                    userType: 'admin',
-                    status: 'ativo',
+                    name: 'Teste 2',
+                    email: 'teste2@example.com',
+                    password: hashedPassword,
+                    userType: 'common',
+                    status: 'active',
                 },
             ],
         });
 
-        // Crie módulos iniciais
+        const createdUsers = await prisma.user.findMany({
+            where: { email: { in: ['teste1@example.com', 'teste2@example.com'] } },
+        });
+
+        await Promise.all(
+            createdUsers.map(user =>
+                prisma.progress.create({
+                    data: {
+                        referenceUser: user.id,
+                        videosWatched: 0,
+                        completedActivities: 0,
+                        completedReviews: 0,
+                    },
+                })
+            )
+        );
+
         await prisma.module.createMany({
             data: [
                 {
                     moduleTitle: 'Módulo 1',
-                    videoTitle: 'Vídeo do Módulo 1',
-                    videoUrl: 'https://video1.com',
+                    videoTitle: 'O que é Matemática?',
+                    videoUrl: 'zXiFaFkL9KQ',
                 },
                 {
                     moduleTitle: 'Módulo 2',
-                    videoTitle: 'Vídeo do Módulo 2',
-                    videoUrl: 'https://video2.com',
+                    videoTitle: 'Números de 0 a 10',
+                    videoUrl: '9gxndvXzC6U',
+                },
+                {
+                    moduleTitle: 'Módulo 3',
+                    videoTitle: 'Antecessor e sucessor',
+                    videoUrl: 'rtdknGTnePE',
+                },
+                {
+                    moduleTitle: 'Módulo 4',
+                    videoTitle: 'Adição',
+                    videoUrl: 'kq0kh0XvT9c&list=PLbJFFlKBGuS4KhM0BG49t_9Mwluibqnuc',
                 },
             ],
         });
